@@ -4,10 +4,10 @@ var teams = [
   "Man United","Tottenham","Newcastle","Everton","Aston Villa"
 ];
 
-/* ===== LOAD SAVED DATA ===== */
+/* ===== LOAD STORAGE ===== */
 var stats = JSON.parse(localStorage.getItem("stats")) || {};
 var fixtures = JSON.parse(localStorage.getItem("fixtures")) || [];
-var resultsLog = JSON.parse(localStorage.getItem("resultsLog")) || [];
+var resultsLog = JSON.parse(localStorage.getItem("resultsLog")) || {};
 var currentRound = JSON.parse(localStorage.getItem("currentRound")) || 0;
 
 /* ===== INIT STATS ===== */
@@ -19,7 +19,7 @@ function initStats() {
   }
 }
 
-/* ===== GENERATE FIXTURES ===== */
+/* ===== ROUND ROBIN FIXTURES ===== */
 function generateFixtures() {
 
   if (fixtures.length > 0) return;
@@ -56,18 +56,47 @@ function showFixtures() {
   box.innerHTML = "";
 
   var round = fixtures[currentRound];
+  var saved = resultsLog[currentRound];
 
   for (var i = 0; i < round.length; i++) {
 
+    var disabled = saved ? "disabled" : "";
+
+    var g1 = saved ? saved[i].g1 : "";
+    var g2 = saved ? saved[i].g2 : "";
+
     box.innerHTML +=
       "<b>" + round[i].home + "</b>" +
-      " <input id='g" + i + "h'> vs " +
-      "<input id='g" + i + "a'> " +
+      " <input id='g"+i+"h' value='"+g1+"' "+disabled+"> vs " +
+      "<input id='g"+i+"a' value='"+g2+"' "+disabled+"> " +
       "<b>" + round[i].away + "</b><br>";
   }
 }
 
-/* ===== MATCH ===== */
+/* ===== RESET STATS ===== */
+function resetStats() {
+  for (var t in stats) {
+    stats[t] = {P:0,W:0,D:0,L:0,GF:0,GA:0,GD:0,Pts:0};
+  }
+}
+
+/* ===== REBUILD TABLE ===== */
+function rebuildTable() {
+
+  resetStats();
+
+  for (var r in resultsLog) {
+
+    var matches = resultsLog[r];
+
+    for (var i = 0; i < matches.length; i++) {
+      var m = matches[i];
+      playMatch(m.home, m.away, m.g1, m.g2);
+    }
+  }
+}
+
+/* ===== MATCH ENGINE ===== */
 function playMatch(home, away, g1, g2) {
 
   stats[home].P++;
@@ -81,35 +110,40 @@ function playMatch(home, away, g1, g2) {
 
   if (g1 > g2) {
     stats[home].W++; stats[away].L++; stats[home].Pts += 3;
-  } else if (g1 < g2) {
+  } else if (g2 > g1) {
     stats[away].W++; stats[home].L++; stats[away].Pts += 3;
   } else {
     stats[home].D++; stats[away].D++;
-    stats[home].Pts += 1; stats[away].Pts += 1;
+    stats[home].Pts++; stats[away].Pts++;
   }
 
   stats[home].GD = stats[home].GF - stats[home].GA;
   stats[away].GD = stats[away].GF - stats[away].GA;
 }
 
-/* ===== SAVE RESULTS ===== */
+/* ===== SAVE MATCHDAY ===== */
 function submitResults() {
 
   var round = fixtures[currentRound];
-  var roundResults = [];
+
+  var data = [];
 
   for (var i = 0; i < round.length; i++) {
 
     var g1 = Number(document.getElementById("g"+i+"h").value);
     var g2 = Number(document.getElementById("g"+i+"a").value);
 
-    playMatch(round[i].home, round[i].away, g1, g2);
-
-    roundResults.push({home:round[i].home,away:round[i].away,score:g1+"-"+g2});
+    data.push({
+      home: round[i].home,
+      away: round[i].away,
+      g1: g1,
+      g2: g2
+    });
   }
 
-  resultsLog[currentRound] = roundResults;
+  resultsLog[currentRound] = data;
 
+  rebuildTable();
   saveAll();
   showTable();
 }
@@ -159,7 +193,7 @@ function showTable() {
   }
 }
 
-/* ===== SAVE ALL (IMPORTANT) ===== */
+/* ===== SAVE ===== */
 function saveAll() {
   localStorage.setItem("stats", JSON.stringify(stats));
   localStorage.setItem("fixtures", JSON.stringify(fixtures));
@@ -195,7 +229,7 @@ function downloadResults() {
     text += "Matchday "+(Number(r)+1)+"\n";
     for (var i=0;i<resultsLog[r].length;i++) {
       var m = resultsLog[r][i];
-      text += m.home+" vs "+m.away+" = "+m.score+"\n";
+      text += m.home+" vs "+m.away+" = "+m.g1+"-"+m.g2+"\n";
     }
     text += "\n";
   }
@@ -212,5 +246,6 @@ function downloadFile(name,content){
 /* ===== START ===== */
 initStats();
 generateFixtures();
+rebuildTable();
 showFixtures();
 showTable();
