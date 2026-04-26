@@ -69,6 +69,15 @@ function showFixtures() {
       "<br><br>";
   }
 }
+function prevRound() {
+
+  if (currentRound > 0) {
+    currentRound--;
+    showFixtures();
+  } else {
+    alert("You are at Matchday 1");
+  }
+}
 
 /* ===== MATCH ENGINE ===== */
 function playMatch(home, away, g1, g2) {
