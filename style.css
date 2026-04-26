@@ -1,49 +1,63 @@
 body {
-  font-family: Arial;
-  background: #0f172a;
-  color: white;
   margin: 0;
+  font-family: Arial;
+  background: #0a0f1c;
+  color: white;
 }
 
-.container {
-  width: 90%;
+.app {
+  width: 95%;
   margin: auto;
-  text-align: center;
+  padding: 20px;
 }
 
 h1 {
+  text-align: center;
   color: #38bdf8;
-  margin-top: 20px;
+}
+
+.topbar {
+  background: #111827;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
 }
 
 #fixtures {
-  background: #1e293b;
+  background: #111827;
+  margin-top: 20px;
   padding: 20px;
-  border-radius: 10px;
-  margin: 20px 0;
-  min-height: 200px;
+  border-radius: 12px;
+  min-height: 250px;
+  font-size: 18px;
 }
 
 input {
   width: 60px;
   padding: 6px;
   margin: 5px;
-  border-radius: 5px;
+  border-radius: 6px;
   border: none;
+  text-align: center;
 }
 
-.buttons button {
-  padding: 12px;
+.controls {
+  text-align: center;
+  margin-top: 10px;
+}
+
+button {
+  padding: 12px 15px;
   margin: 5px;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
   background: #22c55e;
   color: white;
   font-weight: bold;
+  cursor: pointer;
 }
 
-.buttons button:hover {
+button:hover {
   background: #16a34a;
 }
 
@@ -51,11 +65,15 @@ table {
   width: 100%;
   margin-top: 20px;
   border-collapse: collapse;
-  background: white;
-  color: black;
+  background: #111827;
 }
 
-th, td {
+th {
+  background: #1f2937;
+}
+
+td, th {
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #374151;
+  text-align: center;
 }
