@@ -6,24 +6,30 @@
 </head>
 <body>
 
-<h1>League Admin System</h1>
+<div class="container">
+
+<h1>🏆 League Admin Dashboard</h1>
 
 <h2 id="roundTitle"></h2>
 
 <div id="fixtures"></div>
 
-<button onclick="submitResults()">Submit Results</button>
-  <button onclick="prevRound()">Previous Matchday</button>
-<button onclick="nextRound()">Next Matchday</button>
+<div class="buttons">
+  <button onclick="prevRound()">⬅ Back</button>
+  <button onclick="submitResults()">💾 Save Results</button>
+  <button onclick="nextRound()">Next ➡</button>
+</div>
 
-<br><br>
+<div class="buttons">
+  <button onclick="downloadTable()">Download Table</button>
+  <button onclick="downloadFixtures()">Download Fixtures</button>
+  <button onclick="downloadResults()">Download Results</button>
+</div>
 
-<button onclick="downloadTable()">Download Table</button>
-<button onclick="downloadFixtures()">Download Fixtures</button>
-<button onclick="downloadResults()">Download Results</button>
-
-<h2>Table</h2>
+<h2>League Table</h2>
 <table id="table"></table>
+
+</div>
 
 <script src="script.js"></script>
 </body>
